@@ -1,8 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/bloc/all_transportation/all_transportation_bloc.dart';
 import 'package:travel_app/core/assets.gen.dart';
 import 'package:travel_app/core/colors.dart';
 import 'package:travel_app/core/build_context_ext.dart';
+import 'package:travel_app/models/transportation_model.dart';
+import 'package:travel_app/pages/create_order.dart';
 import 'package:travel_app/pages/flight_page.dart';
 import 'package:travel_app/pages/train_page.dart';
 import 'package:travel_app/widgets/search_input.dart';
@@ -21,6 +25,7 @@ class _HomePageState extends State<HomePage> {
     Assets.banner2.path,
   ];
   int _currentIndex = 0;
+  List<Transportasi> searchResults = [];
 
   @override
   void dispose() {
@@ -62,8 +67,38 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 32.0),
-                    SearchInput(
-                      controller: searchController,
+                    BlocBuilder<AllTransportationBloc, AllTransportationState>(
+                      builder: (context, state) {
+                        if (state is AllTransportationLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is AllTransportationSuccess) {
+                          return SearchInput(
+                            controller: searchController,
+                            onChanged: (value) {
+                              setState(() {
+                                final transportations = state.data;
+                                final lowerCaseValue = value.toLowerCase();
+                                searchResults =
+                                    transportations.where((transportation) {
+                                  final tujuan =
+                                      transportation.tujuan!.toLowerCase();
+                                  return tujuan.contains(lowerCaseValue);
+                                }).toList();
+                              });
+                            },
+                          );
+                        }
+                        return Center(
+                          child: IconButton(
+                            onPressed: () => context
+                                .read<AllTransportationBloc>()
+                                .add(const GetAllTransportations()),
+                            icon: const Icon(Icons.refresh),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24.0),
                     StatefulBuilder(
@@ -124,23 +159,84 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    const Text(
-                      'Transportasi',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
+                    if (searchController.text.isEmpty) ...[
+                      const Text(
+                        'Transportasi',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    InkWell(
-                      onTap: () => context.push(const FlightPage()),
-                      child: Assets.flightBanner.image(),
-                    ),
-                    const SizedBox(height: 16.0),
-                    InkWell(
-                      onTap: () => context.push(const TrainPage()),
-                      child: Assets.trainBanner.image(),
-                    ),
+                      const SizedBox(height: 16.0),
+                      InkWell(
+                        onTap: () => context.push(const FlightPage()),
+                        child: Assets.flightBanner.image(),
+                      ),
+                      const SizedBox(height: 16.0),
+                      InkWell(
+                        onTap: () => context.push(const TrainPage()),
+                        child: Assets.trainBanner.image(),
+                      ),
+                      const SizedBox(height: 24.0),
+                      const Text(
+                        'Team',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 24.0),
+                      Assets.team1.image(),
+                      const SizedBox(height: 16.0),
+                      Assets.team2.image(),
+                      const SizedBox(height: 16.0),
+                      Assets.team3.image(),
+                    ] else ...[
+                      const Text(
+                        'Hasil Pencarian',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      if (searchResults.isEmpty)
+                        const Text('-')
+                      else
+                        ...searchResults
+                            .map(
+                              (item) => ListTile(
+                                leading: item.tipe == 'Kereta'
+                                    ? Assets.train.image()
+                                    : Assets.flight.image(),
+                                title: Text(
+                                  item.nama!,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.kelas!),
+                                    Text(
+                                        '${item.pemberangkatan} > ${item.tujuan}'),
+                                  ],
+                                ),
+                                trailing: Text(
+                                  item.priceFormatted,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.secondary,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                                onTap: () => context.push(CreateOrder(
+                                  item: item,
+                                )),
+                              ),
+                            )
+                            .toList(),
+                    ],
                   ],
                 ),
               ),

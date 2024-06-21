@@ -22,6 +22,9 @@ class Assets {
   static const AssetGenImage icHome = AssetGenImage('assets/ic_home.png');
   static const AssetGenImage icOrder = AssetGenImage('assets/ic_order.png');
   static const AssetGenImage icTask = AssetGenImage('assets/ic_task.png');
+  static const AssetGenImage team1 = AssetGenImage('assets/team1.png');
+  static const AssetGenImage team2 = AssetGenImage('assets/team2.png');
+  static const AssetGenImage team3 = AssetGenImage('assets/team3.png');
   static const AssetGenImage train = AssetGenImage('assets/train.png');
   static const AssetGenImage trainBanner =
       AssetGenImage('assets/train_banner.png');
@@ -36,6 +39,9 @@ class Assets {
         icHome,
         icOrder,
         icTask,
+        team1,
+        team2,
+        team3,
         train,
         trainBanner
       ];

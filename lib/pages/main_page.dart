@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/bloc/all_transportation/all_transportation_bloc.dart';
 import 'package:travel_app/bloc/page_bloc.dart';
 import 'package:travel_app/core/assets.gen.dart';
 import 'package:travel_app/core/build_context_ext.dart';
@@ -20,6 +21,12 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const HistoryPage(),
   ];
+
+  @override
+  void initState() {
+    context.read<AllTransportationBloc>().add(const GetAllTransportations());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

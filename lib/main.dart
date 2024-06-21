@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/bloc/all_transportation/all_transportation_bloc.dart';
 import 'package:travel_app/bloc/booking/booking_bloc.dart';
 import 'package:travel_app/bloc/page_bloc.dart';
 import 'package:travel_app/bloc/transportation/transportation_bloc.dart';
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PageBloc>(create: (context) => PageBloc()),
+        BlocProvider<AllTransportationBloc>(
+            create: (context) =>
+                AllTransportationBloc(TransportationService())),
         BlocProvider<TransportationBloc>(
             create: (context) => TransportationBloc(TransportationService())),
         BlocProvider<BookingBloc>(
