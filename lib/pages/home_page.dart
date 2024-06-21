@@ -203,39 +203,36 @@ class _HomePageState extends State<HomePage> {
                       if (searchResults.isEmpty)
                         const Text('-')
                       else
-                        ...searchResults
-                            .map(
-                              (item) => ListTile(
-                                leading: item.tipe == 'Kereta'
-                                    ? Assets.train.image()
-                                    : Assets.flight.image(),
-                                title: Text(
-                                  item.nama!,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(item.kelas!),
-                                    Text(
-                                        '${item.pemberangkatan} > ${item.tujuan}'),
-                                  ],
-                                ),
-                                trailing: Text(
-                                  item.priceFormatted,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.secondary,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                onTap: () => context.push(CreateOrder(
-                                  item: item,
-                                )),
+                        ...searchResults.map(
+                          (item) => ListTile(
+                            leading: item.tipe == 'Kereta'
+                                ? Assets.train.image()
+                                : Assets.flight.image(),
+                            title: Text(
+                              item.nama!,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.kelas!),
+                                Text('${item.pemberangkatan} > ${item.tujuan}'),
+                              ],
+                            ),
+                            trailing: Text(
+                              item.priceFormatted,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.secondary,
+                                fontSize: 12.0,
                               ),
-                            )
-                            .toList(),
+                            ),
+                            onTap: () => context.push(CreateOrder(
+                              item: item,
+                            )),
+                          ),
+                        ),
                     ],
                   ],
                 ),

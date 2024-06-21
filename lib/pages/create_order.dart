@@ -272,19 +272,13 @@ class _CreateOrderState extends State<CreateOrder> {
             }
             return ElevatedButton(
               onPressed: () {
-                late int idTransportasi;
-                if (widget.item.tipe == 'Kereta') {
-                  idTransportasi = 1001;
-                } else {
-                  idTransportasi = 1501;
-                }
                 final request = BookingRequest(
                   nama: nameController.text,
                   nik: nikController.text,
                   email: emailController.text,
                   telp: phoneNumberController.text,
                   tanggal: DateTime.now(),
-                  idTransportasi: idTransportasi,
+                  idTransportasi: widget.item.id!,
                 );
                 if (nameController.text.isEmpty ||
                     nikController.text.isEmpty ||
